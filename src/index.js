@@ -4,21 +4,28 @@ import "./css/styles.css";
 import BikeService from "./bike-service.js";
 
 function getStolenBike(color, location) {
-  let promise = BikeService.getStolenBikes(color, location);
-  promise.then(
-    function (bikeDataArray) {
-      printElements(bikeDataArray);
-    },
-    function (errorArray) {
-      printError(errorArray);
+  //   let promise = BikeService.getStolenBikes(color, location);
+  BikeService.getStolenBikes(color, location).then(function (response) {
+    if (response.main) {
+      printElements(response, color, location);
+    } else {
+      printError(response, color, location);
     }
-  );
+  });
+  //   promise.then(
+  // function (bikeDataArray) {
+  //   printElements(bikeDataArray);
+  // },
+  // function (errorArray) {
+  //   printError(errorArray);
+  // }
+  //   );
 }
 
-function printElements(data) {
-  const response = data[0];
-  const color = data[1];
-  const location = data[2];
+function printElements(response, color, location) {
+  //   const response = data[0];
+  //   const color = data[1];
+  //   const location = data[2];
   const bikes = response.bikes;
   const list = document.createElement("ul");
   bikes.forEach((bike) => {
@@ -34,10 +41,12 @@ function printElements(data) {
   responseDiv.appendChild(list);
 }
 
-function printError(error) {
+function printError(error, color, location) {
+  console.log(error);
   document.querySelector(
-    "#showResponse"
-  ).innerHTML = `<p>There was an error accessing the weather data for ${error[2]}: ${error[0].status} ${error[0].statusText}: ${error[1].message}</p>`;
+    "#showresponse"
+  ).innerHTML = `<p>There was an error accessing the ${color} stolen bike data for ${location}: 
+  ${error}.</p>`;
 }
 
 function handleFormSubmission(event) {
