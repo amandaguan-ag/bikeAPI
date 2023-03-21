@@ -3,30 +3,20 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/styles.css";
 import BikeService from "./bike-service.js";
 
-function getStolenBike(color, location) {
-  //   let promise = BikeService.getStolenBikes(color, location);
+// function getStolenBike(color, location) {//update the name of this function
+function getAPIData(color, location) {
   BikeService.getStolenBikes(color, location).then(function (response) {
-    if (response.main) {
-      printElements(response, color, location);
+    if (response.bikes) {
+      printBike(response, color, location);
     } else {
-      printError(response, color, location);
+      printError(response.error, color, location);
     }
   });
-  //   promise.then(
-  // function (bikeDataArray) {
-  //   printElements(bikeDataArray);
-  // },
-  // function (errorArray) {
-  //   printError(errorArray);
-  // }
-  //   );
 }
 
-function printElements(response, color, location) {
-  //   const response = data[0];
-  //   const color = data[1];
-  //   const location = data[2];
-  const bikes = response.bikes;
+// function printElements(response, color, location) {//// the parameter has changed for this function, as
+function printBike(response, color, location) {
+  let bikes = response.bikes;
   const list = document.createElement("ul");
   bikes.forEach((bike) => {
     const item = document.createElement("li");
@@ -42,7 +32,6 @@ function printElements(response, color, location) {
 }
 
 function printError(error, color, location) {
-  console.log(error);
   document.querySelector(
     "#showresponse"
   ).innerHTML = `<p>There was an error accessing the ${color} stolen bike data for ${location}: 
@@ -55,7 +44,7 @@ function handleFormSubmission(event) {
   const city = document.querySelector("#location").value;
   document.querySelector("#color").value = null;
   document.querySelector("#location").value = null;
-  getStolenBike(color, city);
+  getAPIData(color, city);
 }
 
 window.addEventListener("load", function () {
